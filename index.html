@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Compass 🧭 | بوصلة تقنية المعلومات</title>
+    <style>
+        :root { --primary: #6366f1; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .card { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-main { background: var(--primary); color: white; width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 20px; font-weight: bold; }
+        .btn-main:hover { opacity: 0.9; transform: scale(1.02); }
+        .options-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
+        .option-btn { background: #fff; border: 2px solid #f1f5f9; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.2s; text-align: right; font-size: 1rem; }
+        .option-btn:hover { border-color: var(--primary); background: #f5f3ff; }
+        .progress-container { background: #e2e8f0; height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { background: var(--primary); height: 100%; width: 0%; transition: 0.4s; }
+        .result-details { text-align: right; background: #f1f5f9; padding: 20px; border-radius: 15px; margin-top: 20px; }
+        ul { padding-right: 20px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<div class="card fade-in" id="main-card">
+    <div id="start-screen">
+        <h1 style="font-size: 3rem; margin: 0;">🧭</h1>
+        <h1>IT Compass</h1>
+        <p>مبادرة لاختيار تخصصك التقني الأنسب بناءً على ميولك الشخصية</p>
+        <button class="btn-main" onclick="startQuiz()">ابدأ الاختبار الآن 🚀</button>
+    </div>
+</div>
+
+<script>
+const questions = [
+    { q: "كيف تفضل حل المشاكل؟", options: [
+        { text: "أكتب كود وأجرب حلول منطقية 💻", scores: { dev: 2 } },
+        { text: "أحلل البيانات والأرقام 📊", scores: { data: 2 } },
+        { text: "أفكر كيف يتم اختراق الأنظمة 🛡️", scores: { cyber: 2 } },
+        { text: "أركز على الشكل والتجربة ✨", scores: { ui: 2 } },
+        { text: "أفهم كيف الشبكات تشتغل 🌐", scores: { net: 2 } }
+    ]},
+    { q: "أي نشاط أقرب لك؟", options: [
+        { text: "بناء تطبيق أو موقع", scores: { dev: 2 } },
+        { text: "تحليل إحصائيات وأرقام", scores: { data: 2 } },
+        { text: "اختبار حماية الأنظمة", scores: { cyber: 2 } },
+        { text: "تصميم واجهات تطبيقات", scores: { ui: 2 } },
+        { text: "إعداد شبكات وربط أجهزة", scores: { net: 2 } }
+    ]},
+    { q: "كيف تتعامل مع التفاصيل؟", options: [
+        { text: "أركز على المنطق في الكود", scores: { dev: 2 } },
+        { text: "أحب الدقة الرقمية", scores: { data: 2 } },
+        { text: "أبحث عن الثغرات المخفية", scores: { cyber: 2 } },
+        { text: "أهتم بتناسق الألوان والخطوط", scores: { ui: 2 } },
+        { text: "أحب فهم مسار تدفق البيانات", scores: { net: 2 } }
+    ]},
+    { q: "ما نوع العمل المفضل لديك؟", options: [
+        { text: "بناء مشروع من الصفر", scores: { dev: 2 } },
+        { text: "استخراج نتائج من أرقام ضخمة", scores: { data: 2 } },
+        { text: "تأمين وحماية البيانات", scores: { cyber: 2 } },
+        { text: "تحويل فكرة معقدة لتصميم سهل", scores: { ui: 2 } },
+        { text: "ربط الأنظمة ببعضها", scores: { net: 2 } }
+    ]},
+    { q: "كيف تصف طريقة تفكيرك؟", options: [
+        { text: "خوارزمي ومنظم", scores: { dev: 2 } },
+        { text: "استنتاجي مبني على أرقام", scores: { data: 2 } },
+        { text: "تفكير دفاعي واستراتيجي", scores: { cyber: 2 } },
+        { text: "إبداعي وبصري", scores: { ui: 2 } },
+        { text: "بنيوي وهيكلي", scores: { net: 2 } }
+    ]},
+    { q: "ما التقنية التي تثير فضولك أكثر؟", options: [
+        { text: "تطوير تطبيقات الويب", scores: { dev: 2 } },
+        { text: "الذكاء الاصطناعي", scores: { data: 2 } },
+        { text: "الهجوم الأخلاقي (Hacking)", scores: { cyber: 2 } },
+        { text: "تجربة المستخدم (UX)", scores: { ui: 2 } },
+        { text: "السحابة والاتصالات (Cloud)", scores: { net: 2 } }
+    ]},
+    { q: "عند حدوث خطأ تقني، ماذا تفعل؟", options: [
+        { text: "أبحث عن Bug في الكود", scores: { dev: 2 } },
+        { text: "أراجع صحة البيانات المدخلة", scores: { data: 2 } },
+        { text: "أتأكد أنه ليس اختراقاً", scores: { cyber: 2 } },
+        { text: "أفكر كيف تأثر المستخدم بالخطأ", scores: { ui: 2 } },
+        { text: "أفحص جودة الاتصال والراوتر", scores: { net: 2 } }
+    ]},
+    { q: "ما هو هدفك المهني؟", options: [
+        { text: "أن أكون مبرمجاً محترفاً", scores: { dev: 2 } },
+        { text: "أن أكون عالم بيانات", scores: { data: 2 } },
+        { text: "أن أكون مستشار أمن معلومات", scores: { cyber: 2 } },
+        { text: "أن أكون مصمم منتجات رقمية", scores: { ui: 2 } },
+        { text: "أن أكون مهندس أنظمة وشبكات", scores: { net: 2 } }
+    ]},
+    { q: "بماذا تشعر أنك موهوب؟", options: [
+        { text: "كتابة الأوامر البرمجية", scores: { dev: 2 } },
+        { text: "قراءة الرسوم البيانية", scores: { data: 2 } },
+        { text: "كشف الأخطاء والثغرات", scores: { cyber: 2 } },
+        { text: "تنسيق الأشياء بصرياً", scores: { ui: 2 } },
+        { text: "فهم بنية الأجهزة وتواصلها", scores: { net: 2 } }
+    ]},
+    { q: "أي مهارة تريد تطويرها الآن؟", options: [
+        { text: "تعلم لغة برمجة جديدة", scores: { dev: 2 } },
+        { text: "تعلم لغة SQL", scores: { data: 2 } },
+        { text: "تعلم اختبار الاختراق", scores: { cyber: 2 } },
+        { text: "تعلم أدوات التصميم مثل Figma", scores: { ui: 2 } },
+        { text: "تعلم إدارة السيرفرات", scores: { net: 2 } }
+    ]}
+];
+
+const resultsData = {
+    dev: { emoji: "👨‍💻", title: "Software Development", reason: "لديك شغف ببناء الحلول البرمجية وتحويل المنطق إلى تطبيقات.", steps: ["تعلم Python أو Java", "افهم مهارات الـ Problem Solving", "ابدأ بمشاريع على GitHub"] },
+    data: { emoji: "📈", title: "Data Science", reason: "تميل لتحويل الأرقام الصامتة إلى قرارات ذكية وتحب الإحصاء.", steps: ["تعلم Excel المتقدم و SQL", "ادرس Python للمكتبات العلمية", "تعلم الـ Machine Learning"] },
+    cyber: { emoji: "🛡️", title: "Cybersecurity", reason: "تفكيرك الأمني وحرصك على حماية الأنظمة يجعلك بارعاً في هذا المجال.", steps: ["تعلم أساسيات Linux", "ادرس الـ Networking بعمق", "احصل على شهادة Security+"] },
+    ui: { emoji: "🎨", title: "UI/UX Design", reason: "أنت مبدع بصرياً وتهتم براحة المستخدم وسهولة الوصول.", steps: ["تعلم مبادئ الـ Typography", "احترف العمل على Figma", "ادرس سيكولوجية المستخدم"] },
+    net: { emoji: "🌐", title: "Networking", reason: "تدرك أهمية الربط والاتصال وتجيد التعامل مع البنية التحتية.", steps: ["احصل على شهادة CCNA", "تعلم الحوسبة السحابية", "ادرس بروتوكولات الاتصال"] }
+};
+
+let currentQ = 0;
+let scores = { dev: 0, data: 0, cyber: 0, ui: 0, net: 0 };
+
+function startQuiz() {
+    renderQuestion();
+}
+
+function renderQuestion() {
+    const q = questions[currentQ];
+    const progress = (currentQ / questions.length) * 100;
+    document.getElementById('main-card').innerHTML = `
+        <div class="progress-container"><div class="progress-bar" style="width: ${progress}%"></div></div>
+        <p style="color: #64748b">السؤال ${currentQ + 1} من ${questions.length}</p>
+        <h2 class="fade-in">${q.q}</h2>
+        <div class="options-grid">
+            ${q.options.map((opt, i) => `<button class="option-btn fade-in" onclick="nextStep(${i})">${opt.text}</button>`).join('')}
+        </div>
+    `;
+}
+
+function nextStep(optionIndex) {
+    const points = questions[currentQ].options[optionIndex].scores;
+    for (let key in points) scores[key] += points[key];
+    
+    currentQ++;
+    if (currentQ < questions.length) renderQuestion();
+    else showResult();
+}
+
+function showResult() {
+    const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+    const info = resultsData[winner];
+    document.getElementById('main-card').innerHTML = `
+        <h1 style="font-size: 4rem; margin-bottom: 0;">${info.emoji}</h1>
+        <h2 style="color: var(--primary)">المجال الأنسب: ${info.title}</h2>
+        <div class="result-details fade-in">
+            <h3>💡 لماذا هذا المجال؟</h3>
+            <p>${info.reason}</p>
+            <hr style="border: 0; border-top: 1px solid #cbd5e1; margin: 15px 0;">
+            <h3>🚀 خارطة الطريق:</h3>
+            <ul>${info.steps.map(s => `<li>${s}</li>`).join('')}</ul>
+        </div>
+        <button class="btn-main" style="background: #64748b;" onclick="location.reload()">إعادة الاختبار 🔄</button>
+    `;
+}
+</script>
+</body>
+</html>
