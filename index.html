@@ -1,25 +1,1903 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Compass | اكتشف مسارك المهني</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IT Compass</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    :root {
+      --navy-deep: #050a14;
+      --cyan: #22d3ee;
+      --cyan-dim: #06b6d4;
+      --pink: #f472b6;
+      --white: #f8fafc;
+      --muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: "Outfit", system-ui, sans-serif;
+      color: var(--white);
+      background: var(--navy-deep);
+      overflow-x: hidden;
+    }
+
+    .bg-stage {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(34, 211, 238, 0.12), transparent 55%),
+        radial-gradient(ellipse 90% 60% at 100% 50%, rgba(244, 114, 182, 0.06), transparent 50%),
+        radial-gradient(ellipse 70% 50% at 0% 80%, rgba(6, 182, 212, 0.08), transparent 45%),
+        linear-gradient(165deg, #020617 0%, #0c1929 35%, #050a14 70%, #020617 100%);
+    }
+
+    .bg-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black, transparent);
+      pointer-events: none;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.035;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.75rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      display: grid;
+      place-items: center;
+      color: #020617;
+    }
+
+    .logo-mark svg { width: 1.1rem; height: 1.1rem; }
+
+    .btn-login {
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.55rem 1.15rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--white);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-login:hover {
+      border-color: rgba(34, 211, 238, 0.45);
+      background: rgba(15, 23, 42, 0.85);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.12);
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: calc(100vh - 5.5rem);
+      padding: 2rem 1.5rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 8vw, 4.25rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(105deg, #fff 0%, #fff 28%, #22d3ee 42%, #f472b6 58%, #fff 72%, #e2e8f0 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 10s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% center; }
+      50% { background-position: 100% center; }
+    }
+
+    .hero-sub {
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 32em;
+      margin-bottom: 2.25rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-primary {
+      font-family: "Outfit", sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--cyan), var(--cyan-dim));
+      color: #020617;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.35), 0 12px 40px rgba(34, 211, 238, 0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.5), 0 16px 48px rgba(34, 211, 238, 0.35);
+    }
+
+    .btn-secondary {
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(2, 6, 23, 0.6);
+      color: var(--white);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(244, 114, 182, 0.4);
+      background: rgba(15, 23, 42, 0.75);
+      transform: translateY(-2px);
+    }
+
+    .cards-section {
+      padding: 1rem 1.5rem 5rem;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 560px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .paths-grid { grid-template-columns: 1fr !important; }
+    }
+
+    .glass-card {
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      text-align: center;
+      padding: 1.75rem 1.25rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .glass-card:hover { transform: translateY(-6px); }
+
+    .glass-card__title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .glass-card__sub {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .glass-card--blue { border-color: rgba(59, 130, 246, 0.55); box-shadow: 0 0 20px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .glass-card--blue:hover { border-color: rgba(96, 165, 250, 0.85); box-shadow: 0 12px 40px rgba(59, 130, 246, 0.35); }
+    .glass-card--cyan { border-color: rgba(34, 211, 238, 0.55); box-shadow: 0 0 20px rgba(34, 211, 238, 0.15), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .glass-card--cyan:hover { border-color: rgba(34, 211, 238, 0.9); box-shadow: 0 12px 40px rgba(34, 211, 238, 0.35); }
+    .glass-card--purple { border-color: rgba(168, 85, 247, 0.55); box-shadow: 0 0 20px rgba(168, 85, 247, 0.15), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .glass-card--purple:hover { border-color: rgba(192, 132, 252, 0.9); box-shadow: 0 12px 40px rgba(168, 85, 247, 0.35); }
+    .glass-card--pink { border-color: rgba(244, 114, 182, 0.55); box-shadow: 0 0 20px rgba(244, 114, 182, 0.15), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .glass-card--pink:hover { border-color: rgba(244, 114, 182, 0.9); box-shadow: 0 12px 40px rgba(244, 114, 182, 0.35); }
+
+    .glass-card--green { border-color: rgba(34, 197, 94, 0.55); box-shadow: 0 0 20px rgba(34, 197, 94, 0.15), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .glass-card--green:hover { border-color: rgba(74, 222, 128, 0.9); box-shadow: 0 12px 40px rgba(34, 197, 94, 0.35); }
+    .glass-card--yellow { border-color: rgba(234, 179, 8, 0.55); box-shadow: 0 0 20px rgba(234, 179, 8, 0.15), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .glass-card--yellow:hover { border-color: rgba(250, 204, 21, 0.9); box-shadow: 0 12px 40px rgba(234, 179, 8, 0.35); }
+    .glass-card--red { border-color: rgba(239, 68, 68, 0.55); box-shadow: 0 0 20px rgba(239, 68, 68, 0.15), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .glass-card--red:hover { border-color: rgba(248, 113, 113, 0.9); box-shadow: 0 12px 40px rgba(239, 68, 68, 0.35); }
+    .glass-card--orange { border-color: rgba(249, 115, 22, 0.55); box-shadow: 0 0 20px rgba(249, 115, 22, 0.15), inset 0 1px 0 rgba(255,255,255,0.06); }
+    .glass-card--orange:hover { border-color: rgba(251, 146, 60, 0.9); box-shadow: 0 12px 40px rgba(249, 115, 22, 0.35); }
+
+    /* Panels */
+    .panel {
+      display: none;
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      padding: 3rem 1.5rem 5rem;
+      max-width: 720px;
+      margin: 0 auto;
+      scroll-margin-top: 1rem;
+      animation: fadeIn 0.45s ease;
+    }
+
+    .panel.is-active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-heading {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .panel-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 1.5rem;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-back:hover { color: var(--white); border-color: rgba(34, 211, 238, 0.45); }
+
+    /* Quiz */
+    .quiz-progress-wrap {
+      margin-bottom: 2rem;
+    }
+
+    .quiz-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-progress-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      overflow: hidden;
+      border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--cyan), var(--pink));
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.6);
+      transition: width 0.4s ease;
+    }
+
+    .quiz-question {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+      min-height: 3.5em;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .quiz-option {
+      text-align: right;
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(12px);
+      color: var(--white);
+      font-family: inherit;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .quiz-option:hover {
+      border-color: rgba(34, 211, 238, 0.55);
+      transform: translateX(-4px);
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.15);
+    }
+
+    /* Result */
+    .result-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(16px);
+      border: 1px solid;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .result-field {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 28em;
+      margin: 0 auto 1.5rem;
+    }
+
+    .btn-result {
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      color: #020617;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-result:hover { transform: translateY(-2px); }
+
+    /* Paths grid */
+    .paths-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .path-card {
+      padding: 1.35rem 1rem;
+    }
+
+    .path-card .glass-card__title { margin-bottom: 0; }
+
+    /* Field detail */
+    #field-detail.panel {
+      max-width: 760px;
+    }
+
+    .field-detail-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .field-detail-title {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .field-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .field-section {
+      padding: 1.35rem 1.4rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid;
+      text-align: right;
+    }
+
+    .field-section__title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .field-section__body {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+
+    .field-section__body ul {
+      list-style: none;
+    }
+
+    .field-section__body li {
+      margin-bottom: 0.4rem;
+      padding-right: 0.15rem;
+    }
+
+    .field-section__body li::before {
+      content: "▸ ";
+      opacity: 0.7;
+    }
+
+    .field-section__body p {
+      margin-bottom: 0.5rem;
+    }
+
+    .field-section__body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-group__label {
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.35rem;
+      font-size: 0.9rem;
+    }
+
+    .field-group__label::before {
+      content: none;
+    }
+
+    .field-step {
+      display: flex;
+      gap: 0.65rem;
+      margin-bottom: 0.55rem;
+      align-items: flex-start;
+    }
+
+    .field-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-step__num {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #020617;
+    }
+
+    .field-step__text {
+      flex: 1;
+      padding-top: 0.1rem;
+    }
+
+    .field-channels {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .field-channels__row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: baseline;
+    }
+
+    .field-channels__tag {
+      font-weight: 600;
+      color: var(--white);
+      font-size: 0.85rem;
+      min-width: 3.5rem;
+    }
+
+    .field-note {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.25);
+      border-right: 3px solid;
+      color: var(--white);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .field-subcards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .field-subcard {
+      padding: 1rem 1.1rem;
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.5);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .field-subcard__title {
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.35rem;
+      font-size: 0.95rem;
+    }
+
+    .field-subcard__text {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* Guide modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: rgba(2, 6, 23, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-card {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.25rem 1.5rem 1.5rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      box-shadow:
+        0 0 50px rgba(34, 211, 238, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      text-align: center;
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.is-open .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 0.85rem;
+      left: 0.85rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      background: rgba(2, 6, 23, 0.7);
+      color: var(--white);
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, color 0.2s;
+    }
+
+    .modal-close:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.35);
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      color: var(--white);
+      background: linear-gradient(135deg, #fff, var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .journey-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      text-align: right;
+    }
+
+    .journey-step {
+      padding: 1rem 1.15rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.08);
+    }
+
+    .journey-step__heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+      line-height: 1.45;
+    }
+
+    .journey-step__desc {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .journey-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem 0;
+      color: var(--cyan);
+      font-size: 1.35rem;
+      font-weight: 700;
+      text-shadow:
+        0 0 12px rgba(34, 211, 238, 0.9),
+        0 0 24px rgba(34, 211, 238, 0.45);
+      filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.6));
+    }
+
+    /* Feedback page */
+    #feedback-section.panel {
+      max-width: 640px;
+    }
+
+    .rating-wrap {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .rating-label {
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--white);
+    }
+
+    .rating-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--pink);
+      text-shadow: 0 0 24px rgba(244, 114, 182, 0.5);
+      margin-bottom: 0.75rem;
+      min-height: 2.5rem;
+    }
+
+    .rating-stars {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .rating-btn {
+      width: 2.35rem;
+      height: 2.35rem;
+      border-radius: 10px;
+      border: 1px solid rgba(244, 114, 182, 0.35);
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--muted);
+      font-family: "Outfit", sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s, color 0.2s, background 0.2s;
+    }
+
+    .rating-btn:hover {
+      border-color: rgba(244, 114, 182, 0.7);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .rating-btn.is-selected {
+      border-color: var(--pink);
+      background: rgba(244, 114, 182, 0.2);
+      color: var(--pink);
+      box-shadow: 0 0 20px rgba(244, 114, 182, 0.35);
+    }
+
+    .feedback-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feedback-box {
+      padding: 1.15rem 1.25rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(244, 114, 182, 0.4);
+      box-shadow: 0 0 20px rgba(244, 114, 182, 0.08);
+    }
+
+    .feedback-box__label {
+      display: block;
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.65rem;
+      color: var(--white);
+      text-align: right;
+    }
+
+    .feedback-box textarea {
+      width: 100%;
+      min-height: 88px;
+      padding: 0.75rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(2, 6, 23, 0.5);
+      color: var(--white);
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .feedback-box textarea:focus {
+      border-color: rgba(244, 114, 182, 0.55);
+      box-shadow: 0 0 16px rgba(244, 114, 182, 0.12);
+    }
+
+    .feedback-box textarea::placeholder {
+      color: rgba(148, 163, 184, 0.6);
+    }
+
+    .btn-send-feedback {
+      margin-top: 0.5rem;
+      width: 100%;
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 0.95rem 1.5rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      color: #020617;
+      background: linear-gradient(135deg, var(--pink), #ec4899);
+      box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.4), 0 12px 40px rgba(244, 114, 182, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    }
+
+    .btn-send-feedback:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.55), 0 16px 48px rgba(244, 114, 182, 0.4);
+    }
+
+    .btn-send-feedback:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .feedback-success {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(34, 211, 238, 0.55);
+      box-shadow: 0 0 40px rgba(34, 211, 238, 0.2);
+    }
+
+    .feedback-success.is-visible {
+      display: block;
+    }
+
+    .feedback-success p {
+      font-family: "Noto Sans Arabic", "Outfit", sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-shadow: 0 0 24px rgba(34, 211, 238, 0.4);
+    }
+
+    .feedback-form.is-hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <div id="app">
-        <header class="hero">
-            <h1>IT Compass</h1>
-            <p>اكتشف مسارك المهني المثالي</p>
-            <button id="start-btn">ابدأ الاكتشاف الآن</button>
-        </header>
+  <div class="bg-stage" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
 
-        <section class="mind-map">
-            <h2>خريطة المسارات السبعة</h2>
-            <div id="map-grid" class="grid"></div>
-        </section>
+  <header class="nav">
+    <a href="#" class="logo" id="logo-home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" opacity="0.35" />
+          <path d="M12 5L14.5 12L12 19L9.5 12L12 5Z" fill="currentColor" />
+        </svg>
+      </span>
+      IT Compass
+    </a>
+  </header>
+
+  <div id="home-view">
+    <main class="hero">
+      <h1>Your IT Future, Mapped.</h1>
+      <p class="hero-sub" dir="rtl" lang="ar">
+        بوصلة تقنية توجهك نحو المهارات والمسارات والفرص التي تناسبك — خطوة بخطوة.
+      </p>
+      <div class="hero-actions">
+        <button type="button" class="btn-primary" id="btn-start">Start &nbsp;→</button>
+        <button type="button" class="btn-secondary" id="btn-start-ar" dir="rtl" lang="ar">ابدأ</button>
+      </div>
+    <div style="text-align:center; margin-top: 2rem; margin-bottom: 1rem; animation: bounce 2s infinite;">
+    <span style="color: #22d3ee; font-size: 3.5rem; text-shadow: 0 0 25px rgba(34,211,238,0.8); cursor: pointer;">↓</span>
+</div>
+
+<style>
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+</style>
+    </main>
+
+    <section class="cards-section" dir="rtl" lang="ar" aria-label="خدمات المنصة">
+      <div class="cards-grid">
+        <article class="glass-card glass-card--blue" id="card-guide" role="button" tabindex="0">
+          <h2 class="glass-card__title">📖 دليل البوصلة</h2>
+          <p class="glass-card__sub">كيف تستخدم المنصة؟</p>
+        </article>
+        <article class="glass-card glass-card--cyan" id="card-paths" role="button" tabindex="0">
+          <h2 class="glass-card__title">🗺️ مسارات التقنية</h2>
+          <p class="glass-card__sub">استكشف المجالات السبعة</p>
+          </article>
+        <article class="glass-card glass-card--pink" id="card-feedback" role="button" tabindex="0">
+          <h2 class="glass-card__title">💬 تطوير المنصة</h2>
+          <p class="glass-card__sub">التقييم الفوري</p>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- Quiz -->
+  <section id="quiz-section" class="panel" dir="rtl" lang="ar" aria-label="اختبار البوصلة">
+    <button type="button" class="btn-back" data-go="home">← العودة للرئيسية</button>
+    <h2 class="panel-heading">🧭 بوصلة التخصص</h2>
+    <p class="panel-sub">أجب على 10 أسئلة لاكتشاف مسارك</p>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-label">
+        <span>التقدم</span>
+        <span id="quiz-step-label">1 / 10</span>
+      </div>
+      <div class="quiz-progress-track">
+        <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+      </div>
     </div>
-    <script src="script.js"></script>
+    <p class="quiz-question" id="quiz-question"></p>
+    <div class="quiz-options" id="quiz-options"></div>
+  </section>
+
+  <!-- Quiz result -->
+  <section id="quiz-result" class="panel" dir="rtl" lang="ar" aria-label="نتيجة الاختبار">
+    <button type="button" class="btn-back" data-go="home">← العودة للرئيسية</button>
+    <div class="result-card" id="result-card">
+      <p class="result-label">مسارك الأنسب هو</p>
+      <h2 class="result-field" id="result-field"></h2>
+      <p class="result-desc" id="result-desc"></p>
+    </div>
+    <div style="text-align: center;">
+      <button type="button" class="btn-result" id="btn-explore-field">اكتشف مجالك بالتفصيل</button>
+    </div>
+  </section>
+
+  <!-- 7 paths -->
+  <section id="paths-section" class="panel" dir="rtl" lang="ar" aria-label="مسارات التقنية">
+    <button type="button" class="btn-back" data-go="home">← العودة للرئيسية</button>
+    <h2 class="panel-heading">🗺️ مسارات التقنية</h2>
+    <p class="panel-sub">اختر مجالاً لاستكشافه بالتفصيل</p>
+    <div class="paths-grid">
+      <article class="glass-card glass-card--blue path-card" data-field="software">
+        <h2 class="glass-card__title">🟦 مسار تطوير البرمجيات</h2>
+      </article>
+      <article class="glass-card glass-card--green path-card" data-field="data">
+        <h2 class="glass-card__title">🟩 مسار البيانات</h2>
+      </article>
+      <article class="glass-card glass-card--yellow path-card" data-field="ai">
+        <h2 class="glass-card__title">🟨 مسار الذكاء الاصطناعي</h2>
+      </article>
+      <article class="glass-card glass-card--red path-card" data-field="cyber">
+        <h2 class="glass-card__title">🟥 مسار الأمن السيبراني</h2>
+      </article>
+      <article class="glass-card glass-card--purple path-card" data-field="networks">
+        <h2 class="glass-card__title">🟪  مسار الشبكات والأنظمة</h2>
+      </article>
+      <article class="glass-card glass-card--orange path-card" data-field="qa">
+        <h2 class="glass-card__title">🟫 مسار اختبار البرمجيات (QA / Testing)</h2>
+      </article>
+      <article class="glass-card glass-card--pink path-card" data-field="additional">
+        <h2 class="glass-card__title">🎨 مسارات إضافية</h2>
+      </article>
+    </div>
+  </section>
+
+  <!-- Guide modal -->
+  <div class="modal-overlay" id="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title" hidden>
+    <div class="modal-card">
+      <button type="button" class="modal-close" id="guide-modal-close" aria-label="إغلاق">×</button>
+      <h2 class="modal-title" id="guide-modal-title">🧭 كيف تستخدم IT Compass؟</h2>
+      <div class="journey-steps" dir="rtl" lang="ar">
+        <article class="journey-step">
+          <h3 class="journey-step__heading">🎯 خُض الاختبار</h3>
+          <p class="journey-step__desc">أجب على 10 أسئلة لتحديد مسارك</p>
+        </article>
+        <div class="journey-arrow" aria-hidden="true">↓</div>
+        <article class="journey-step">
+          <h3 class="journey-step__heading">🔍 تصفح مجالك</h3>
+          <p class="journey-step__desc">اكتشف تفاصيل تخصصك ومصادره</p>
+        </article>
+        <div class="journey-arrow" aria-hidden="true">↓</div>
+        <article class="journey-step">
+          <h3 class="journey-step__heading">💬 شاركنا رأيك</h3>
+          <p class="journey-step__desc">قيّم تجربتك وساعدنا نتطور</p>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback -->
+  <section id="feedback-section" class="panel" dir="rtl" lang="ar" aria-label="تقييم المنصة">
+    <button type="button" class="btn-back" data-go="home">← العودة للرئيسية</button>
+    <h2 class="panel-heading">💬 تطوير المنصة</h2>
+    <p class="panel-sub">ساعدنا نطوّر IT Compass بتقييمك</p>
+
+    <div class="feedback-success" id="feedback-success">
+      <p>شكراً! وصلنا تقييمك 💙</p>
+    </div>
+
+    <form class="feedback-form" id="feedback-form">
+      <div class="rating-wrap">
+        <p class="rating-label">قيّم تجربتك من 10</p>
+        <p class="rating-value" id="rating-value">—</p>
+        <div class="rating-stars" id="rating-buttons" role="group" aria-label="التقييم من 1 إلى 10"></div>
+      </div>
+
+      <div class="feedback-box">
+        <label class="feedback-box__label" for="feedback-positives">✅ الإيجابيات — شو عجبك؟</label>
+        <textarea id="feedback-positives" name="positives" placeholder="اكتب ما أعجبك في المنصة..."></textarea>
+      </div>
+
+      <div class="feedback-box">
+        <label class="feedback-box__label" for="feedback-negatives">⚠️ السلبيات والملاحظات</label>
+        <textarea id="feedback-negatives" name="negatives" placeholder="ملاحظاتك لتحسين المنصة..."></textarea>
+      </div>
+
+      <div class="feedback-box">
+        <label class="feedback-box__label" for="feedback-kind">💌 كلمة لطيفة للفريق</label>
+        <textarea id="feedback-kind" name="message" placeholder="رسالة تشجيعية للفريق..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-send-feedback" id="btn-send-feedback">إرسال التقييم 🚀</button>
+    </form>
+  </section>
+
+  <!-- Field detail -->
+  <section id="field-detail" class="panel" dir="rtl" lang="ar" aria-label="تفاصيل المجال">
+    <button type="button" class="btn-back" id="field-detail-back">← رجوع</button>
+    <header class="field-detail-header">
+      <h1 class="field-detail-title" id="field-detail-title"></h1>
+    </header>
+    <div class="field-sections" id="field-detail-sections"></div>
+  </section>
+
+  <script>
+    const FIELDS = {
+      software: {
+        path: "Software",
+        ar: "تطوير البرمجيات",
+        color: "#22d3ee",
+        border: "rgba(34, 211, 238, 0.55)",
+        glow: "rgba(34, 211, 238, 0.35)",
+        desc: "بناء المواقع والتطبيقات والواجهات التفاعلية باستخدام لغات وأطر البرمجة الحديثة.",
+        sections: [
+          {
+            title: "🌿 التخصصات الفرعية",
+            type: "groups",
+            groups: [
+              { label: "Web", items: ["Frontend", "Backend", "Full Stack"] },
+              { label: "Mobile", items: ["Android", "iOS", "Cross Platform"] },
+              { label: "Desktop", items: ["تطبيقات سطح المكتب"] },
+              { label: "Game Development", items: ["هندسة الألعاب"] }
+            ]
+          },
+          {
+            title: "🛠️ المهارات المطلوبة",
+            type: "items",
+            items: [
+              "Programming Fundamentals",
+              "OOP",
+              "Databases",
+              "Git & GitHub",
+              "APIs",
+              "Problem Solving"
+            ]
+          },
+          {
+            title: "🗺️ خطة التعلم",
+            type: "steps",
+            steps: [
+              "المرحلة الأولى: Java أو Python أو JavaScript",
+              "المرحلة الثانية: Data Structures, Algorithms, OOP",
+              "بعدها اختر: Web (HTML/CSS/JS/React/Node.js) أو Android (Kotlin) أو Games (C# + Unity)"
+            ]
+          },
+          {
+            title: "📺 قنوات موصى بها",
+            type: "channels",
+            channels: {
+              ar: "Elzero Web School, Codezilla",
+              en: "freeCodeCamp, Traversy Media"
+            }
+          }
+        ]
+      },
+      data: {
+        path: "Data",
+        ar: "مسار البيانات",
+        color: "#22c55e",
+        border: "rgba(34, 197, 94, 0.55)",
+        glow: "rgba(34, 197, 94, 0.35)",
+        desc: "تحليل البيانات واستخراج الرؤى عبر الإحصاء والتصور البياني وأدوات مثل Python و Pandas.",
+        sections: [
+          {
+            title: "📊 المسارات",
+            type: "items",
+            items: ["Data Analyst", "Data Engineer", "Data Scientist"]
+          },
+          {
+            title: "⚙️ الفرق بينهم",
+            type: "groups",
+            groups: [
+              { label: "Data Analyst", items: ["Excel", "SQL", "Power BI", "Python"] },
+              { label: "Data Engineer", items: ["SQL متقدم", "Python", "Spark", "ETL", "Cloud"] },
+              { label: "Data Scientist", items: ["Math", "Statistics", "Machine Learning"] }
+            ]
+          },
+          {
+            title: "🗺️ خطة التعلم",
+            type: "steps",
+            steps: [
+              "أولاً: Excel + SQL",
+              "ثانياً: Python + Pandas + Data Visualization",
+              "ثالثاً: اختر Analytics أو Engineering أو Science"
+            ]
+          },
+          {
+            title: "📺 قنوات",
+            type: "channels",
+            channels: { ar: "محمد مشرف", en: "Alex The Analyst, Data With Baraa" }
+          }
+        ]
+      },
+      ai: {
+        path: "AI",
+        ar: "الذكاء الاصطناعي",
+        color: "#eab308",
+        border: "rgba(234, 179, 8, 0.55)",
+        glow: "rgba(234, 179, 8, 0.35)",
+        desc: "تدريب النماذج والتعلم الآلي ومعالجة اللغة والصور.",
+        sections: [
+          {
+            title: "⚠️ نقطة مهمة",
+            type: "note",
+            text: "الـ AI ليس مجالاً للمبتدئين، يحتاج أساس في البرمجة والبيانات والرياضيات أولاً."
+          },
+          {
+            title: "🎯 التخصصات",
+            type: "items",
+            items: ["ML Engineer", "AI Engineer", "NLP Engineer", "Computer Vision Engineer"]
+          },
+          {
+            title: "🗺️ خطة التعلم",
+            type: "steps",
+            steps: [
+              "Python",
+              "Math Basics",
+              "Data Analysis",
+              "Machine Learning",
+              "Deep Learning"
+            ]
+          },
+          {
+            title: "📺 مصادر",
+            type: "items",
+            items: ["Andrew Ng Courses", "Kaggle", "3Blue1Brown"]
+          }
+        ]
+      },
+      cyber: {
+        path: "Cyber",
+        ar: "الأمن السيبراني",
+        color: "#ef4444",
+        border: "rgba(239, 68, 68, 0.55)",
+        glow: "rgba(239, 68, 68, 0.35)",
+        desc: "حماية الأنظمة واكتشاف الثغرات ومراقبة الشبكات.",
+        sections: [
+          {
+            title: "⚠️ الحقيقة",
+            type: "note",
+            text: "مش سهل ومش كله hacking — يحتاج أساسات Networks + Linux + OS قوية أولاً."
+          },
+          {
+            title: "🎯 المسارات",
+            type: "items",
+            items: [
+              "SOC Analyst",
+              "Penetration Tester",
+              "Security Engineer",
+              "Digital Forensics",
+              "Cloud Security"
+            ]
+          },
+          {
+            title: "🛠️ المتطلبات",
+            type: "items",
+            items: ["Networks", "Linux", "Operating Systems", "Scripting"]
+          },
+          {
+            title: "📺 مصادر",
+            type: "items",
+            items: ["TryHackMe", "Hack The Box", "NetworkChuck"]
+          }
+        ]
+      },
+      networks: {
+        path: "Networks",
+        ar: "الشبكات والأنظمة",
+        color: "#a855f7",
+        border: "rgba(168, 85, 247, 0.55)",
+        glow: "rgba(168, 85, 247, 0.35)",
+        desc: "تصميم البنية التحتية والسيرفرات والسحابة وإدارة الأنظمة الموزعة.",
+        sections: [
+          {
+            title: "💡 توضيح",
+            type: "note",
+            text: "DevOps ≠ الشبكات — DevOps أقرب لـ Cloud + Automation + CI/CD + Containers."
+          },
+          {
+            title: "🎯 المسارات",
+            type: "items",
+            items: [
+              "Network Engineer",
+              "System Administrator",
+              "Cloud Engineer",
+              "DevOps Engineer"
+            ]
+          },
+          {
+            title: "🛠️ المهارات",
+            type: "items",
+            items: ["Linux", "Networking", "Servers", "Cloud", "Docker", "Kubernetes"]
+          },
+          {
+            title: "🏆 شهادات مهمة",
+            type: "items",
+            items: ["CCNA", "AWS", "RHCSA"]
+          },
+          {
+            title: "📺 مصادر",
+            type: "items",
+            items: ["Cisco Networking Academy", "TechWorld with Nana"]
+          }
+        ]
+      },
+      qa: {
+        path: "QA",
+        ar: "اختبار البرمجيات",
+        color: "#f97316",
+        border: "rgba(249, 115, 22, 0.55)",
+        glow: "rgba(249, 115, 22, 0.35)",
+        desc: "ضمان جودة المنتجات عبر الاختبار اليدوي والآلي وكتابة حالات الاختبار.",
+        sections: [
+          {
+            title: "💡 حقيقة",
+            type: "note",
+            text: "الـ QA القوي ممكن يكون أخطر من المطور نفسه."
+          },
+          {
+            title: "🎯 الأنواع",
+            type: "groups",
+            groups: [
+              { label: "Manual Testing", items: ["اختبار يدوي"] },
+              { label: "Automation Testing", items: ["كتابة سكربتات"] }
+            ]
+          },
+          {
+            title: "🛠️ المطلوب",
+            type: "items",
+            items: [
+              "Software Lifecycle",
+              "APIs",
+              "Testing Concepts",
+              "Java/Python",
+              "Selenium للـ Automation"
+            ]
+          },
+          {
+            title: "👤 مناسب لمين؟",
+            type: "text",
+            text: "اللي يحب التفاصيل، الصبر، والتحليل."
+          },
+          {
+            title: "📺 مصادر",
+            type: "items",
+            items: ["Test Automation University", "Automation Step by Step"]
+          }
+        ]
+      },
+      additional: {
+        path: "Additional",
+        ar: "مسارات إضافية",
+        color: "#f472b6",
+        border: "rgba(244, 114, 182, 0.55)",
+        glow: "rgba(244, 114, 182, 0.35)",
+        desc: "تخصصات متقاطعة في عالم التقنية تناسب اهتمامات متنوعة.",
+        sections: [
+          {
+            title: "🎨 مسارات إضافية",
+            type: "subcards",
+            subcards: [
+              {
+                title: " (الحوسبة السحابية)☁️ Cloud Computing",
+                text: "أقوى المجالات نمواً، يرتبط بـ DevOps + Security + Data."
+              
+              },
+              {
+                title: "🔌 Embedded Systems",
+                text: "للمحبين الإلكترونيات، يحتاج C/C++ + Hardware Basics."
+              },
+              {
+                title: "⛓️ Blockchain",
+                text: "موجود لكن سوقه متقلب، مش أفضل بداية إلا بشغف حقيقي."
+              },
+              {
+                title: "🎨 UI/UX",
+                text: "مهم جداً ويرفع قيمة المنتج بشكل ضخم."
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    const PATH_TO_FIELD = {
+      Software: "software",
+      Data: "data",
+      AI: "ai",
+      Cyber: "cyber",
+      Networks: "networks",
+      Additional: "additional",
+      QA: "qa"
+    };
+
+    const QUIZ_QUESTIONS = [
+      {
+        q: "انقطع الاتصال بالإنترنت فجأةً أثناء عملك. ما أول ما يتبادر إلى ذهنك؟",
+         options: [
+      { text: "أفتح إعدادات الراوتر وأبدأ بفحص الشبكة خطوةً خطوة", path: "Networks" },
+      { text: "أتساءل إن كان هناك اختراق أو تلاعب بالشبكة", path: "Cyber" },
+      { text: "أنزعج لأنني في منتصف مشروع وأحاول المتابعة دون إنترنت", path: "Software" },
+      { text: "أجمع معلومات عن توقيت الانقطاع وتكراره لأفهم النمط", path: "Data" }
+      ]
+      },
+      {
+         q: "رأيت تطبيقاً بعشرة دنانير يحل مشكلة بسيطة ويحقق مبيعات جيدة. ما أول ما يخطر ببالك؟",
+    options: [
+      { text: "لو أتقنت البرمجة لبنيته بنفسي وربما أحسن منه", path: "Software" },
+      { text: "أتساءل كم عدد مستخدميه وما حجم إيراداته الشهرية", path: "Data" },
+      { text: "هل التطبيق يتعامل مع بيانات المستخدمين بأمان كافٍ؟", path: "Cyber" },
+      { text: "واجهته قديمة وغير مريحة، كان يمكن أن تكون أفضل", path: "Additional" }
+        ]
+      },
+      {
+        q: "أُعطيت ملف إكسل يحتوي على بيانات مبيعات شركة على مدى ثلاث سنوات. ماذا ستفعل به؟",
+    options: [
+      { text: "أبحث عن الأنماط والاتجاهات وأفهم ما تقوله الأرقام", path: "Data" },
+      { text: "أفكر في بناء نموذج يتنبأ بالمبيعات المستقبلية تلقائياً", path: "AI" },
+      { text: "أتحقق أولاً من أمان الملف ومصدر البيانات قبل فتحه", path: "Cyber" },
+      { text: "أصمم لوحة بيانات واضحة وجذابة لعرض النتائج للإدارة", path: "Additional" }
+        ]
+      },
+      {
+       q: "فتحت موقعاً قديم التصميم لإتمام معاملة مهمة. ما أول انطباع يتكوّن لديك؟",
+    options: [
+      { text: "هذا التصميم القديم قد يعني أن الموقع غير آمن", path: "Cyber" },
+      { text: "أتساءل كيف يُبنى هذا الموقع من الداخل وما التقنيات المستخدمة", path: "Software" },
+      { text: "أتضايق من رداءة التصميم وأتساءل كيف قُبل هذا الشكل", path: "Additional" },
+      { text: "أتساءل إن كانت بياناته ومعلوماته موثوقة وحديثة", path: "Data" }
+        ]
+      },
+      {
+        q: "طُلب منك شرح مفهوم تقني معقد لزميل لا خلفية تقنية له. كيف تتعامل معه؟",
+    options: [
+      { text: "أختار مثالاً من حياته اليومية يقرّب الفكرة ويجعلها ملموسة", path: "Additional" },
+      { text: "أشرح بالتدريج من الأبسط للأعقد وأتحقق من فهمه في كل خطوة", path: "QA" },
+      { text: "أضع أرقاماً ومخططات توضيحية لأجعل الشرح أكثر دقة", path: "Data" },
+      { text: "أحاول برمجة تجربة صغيرة تفاعلية تجعله يرى المفهوم بنفسه", path: "Software" }
+        ]
+      },
+      {
+         q: "اكتشفت أن تطبيقاً تستخدمه تعرّض لاختراق وتسرّبت بيانات مستخدميه. ما أول تساؤل لديك؟",
+    options: [
+      { text: "كيف حدث الاختراق تقنياً وما الثغرة التي استُغلّت؟", path: "Cyber" },
+      { text: "كم عدد المتضررين وما نوع البيانات التي تسرّبت؟", path: "Data" },
+      { text: "هل في الكود الخاص بهم خطأ برمجي كان يمكن تجنّبه؟", path: "Software" },
+      { text: "هل كانوا يُجرون اختبارات أمنية دورية قبل أن يحدث هذا؟", path: "QA" }
+        ]
+      },
+      {
+        q: "أُسند إليك مشروع برمجي كامل يجب تسليمه خلال أسبوعين. ما أول خطوة تبدأ بها؟",
+    options: [
+      { text: "أقسّم المشروع إلى مهام صغيرة وأبدأ بكتابة الكود مباشرةً", path: "Software" },
+      { text: "أضع جدولاً زمنياً وأحدد أولويات كل مهمة بدقة", path: "Data" },
+      { text: "أضع خطة اختبار شاملة لضمان خلو المنتج من الأخطاء", path: "QA" },
+      { text: "أرسم الواجهات أولاً لأتخيّل المنتج كاملاً قبل البدء", path: "Additional" }
+        ]
+      },
+      {
+        q: "استخدمت أداةً تعتمد على الذكاء الاصطناعي وأعطتك نتيجةً مدهشة. ماذا يدور في ذهنك؟",
+    options: [
+      { text: "أتساءل كيف تعلّم النموذج وما البيانات التي دُرِّب عليها", path: "AI" },
+      { text: "أحلل النتيجة وأسأل: هل هي دقيقة أم مجرد صدفة موفّقة؟", path: "Data" },
+      { text: "أفكر في كيفية دمج هذه الأداة في مشروع أعمل عليه حالياً", path: "Software" },
+      { text: "أتساءل إن كان هناك خطر في اعتماد الناس عليها بشكل كامل", path: "Cyber" }
+        ]
+      },
+      {
+       q: "جرّبت تطبيقاً جديداً وواجهت صعوبةً في إتمام مهمة بسيطة داخله. ما ردّ فعلك الأول؟",
+    options: [
+      { text: "أتتبع كل خطوة فعلتها لأفهم أين المشكلة بالضبط", path: "QA" },
+      { text: "أشعر أن المصمّم لم يضع المستخدم في اعتباره حين صمّم هذه الشاشة", path: "Additional" },
+      { text: "أتساءل عن الكود الذي يعمل خلف الكواليس وما سبب السلوك الغريب", path: "Software" },
+      { text: "أتحقق إن كانت المشكلة متعلقة بالشبكة أو بالخادم", path: "Networks" }
+        ]
+      },
+      {
+         q: "أُتيحت لك فرصة العمل على مشروع تقني كبير، واخترت دورك بحرية تامة. أيّ دور تختار؟",
+    options: [
+      { text: "بناء النظام وكتابة الكود الأساسي الذي يُشغّل كل شيء", path: "Software" },
+      { text: "تحليل بيانات المستخدمين لتوجيه قرارات المنتج", path: "Data" },
+      { text: "تصميم تجربة المستخدم وضمان سهولة الاستخدام", path: "Additional" },
+      { text: "حماية النظام والتأكد من أمانه قبل الإطلاق وبعده", path: "Cyber" }
+        ]
+      }
+    ];
+
+    let quizIndex = 0;
+    const scores = {};
+    let lastResultField = "software";
+    let fieldDetailBackTarget = "paths";
+
+    const EMAILJS_SERVICE_ID = "service_cuwsgtr";
+    const EMAILJS_TEMPLATE_ID = "template_if2qgdc";
+    const EMAILJS_PUBLIC_KEY = "tn5YtUM5aAQL2EoeH";
+
+    const homeView = document.getElementById("home-view");
+    const panels = document.querySelectorAll(".panel");
+    const quizSection = document.getElementById("quiz-section");
+    const quizResult = document.getElementById("quiz-result");
+    const pathsSection = document.getElementById("paths-section");
+    const fieldDetail = document.getElementById("field-detail");
+    const feedbackSection = document.getElementById("feedback-section");
+    const guideModal = document.getElementById("guide-modal");
+
+    let selectedRating = 0;
+
+    function hideAllPanels() {
+      panels.forEach((p) => p.classList.remove("is-active"));
+    }
+
+    function showPanel(panelEl, scroll = true) {
+      hideAllPanels();
+      panelEl.classList.add("is-active");
+      if (scroll) {
+        requestAnimationFrame(() => {
+          panelEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+    }
+
+    function showHome() {
+      hideAllPanels();
+      homeView.style.display = "block";
+      closeGuideModal();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function hideHome() {
+      homeView.style.display = "none";
+    }
+
+    function resetQuiz() {
+      quizIndex = 0;
+      Object.keys(scores).forEach((k) => delete scores[k]);
+      renderQuestion();
+    }
+
+    function startQuiz() {
+      hideHome();
+      resetQuiz();
+      showPanel(quizSection);
+    }
+
+    function renderQuestion() {
+      const q = QUIZ_QUESTIONS[quizIndex];
+      document.getElementById("quiz-question").textContent = q.q;
+      document.getElementById("quiz-step-label").textContent = `${quizIndex + 1} / 10`;
+      const pct = ((quizIndex) / 10) * 100;
+      document.getElementById("quiz-progress-fill").style.width = `${pct}%`;
+
+      const optsEl = document.getElementById("quiz-options");
+      optsEl.innerHTML = "";
+      const labels = ["أ", "ب", "ج", "د"];
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "quiz-option";
+        btn.innerHTML = `<strong>${labels[i]})</strong> ${opt.text}`;
+        btn.addEventListener("click", () => selectAnswer(opt.path));
+        optsEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(path) {
+      scores[path] = (scores[path] || 0) + 1;
+      quizIndex++;
+      if (quizIndex < 10) {
+        document.getElementById("quiz-progress-fill").style.width = `${(quizIndex / 10) * 100}%`;
+        renderQuestion();
+      } else {
+        document.getElementById("quiz-progress-fill").style.width = "100%";
+        showResult();
+      }
+    }
+
+    function getTopPath() {
+      const order = ["Software", "Data", "AI", "Cyber", "Networks", "Additional"];
+      let top = "Software";
+      let max = -1;
+      order.forEach((p) => {
+        const s = scores[p] || 0;
+        if (s > max) {
+          max = s;
+          top = p;
+        }
+      });
+      return top;
+    }
+
+    function showResult() {
+      const topPath = getTopPath();
+      const fieldId = PATH_TO_FIELD[topPath] || "software";
+      lastResultField = fieldId;
+      const field = FIELDS[fieldId];
+
+      const card = document.getElementById("result-card");
+      card.style.borderColor = field.border;
+      card.style.boxShadow = `0 0 40px ${field.glow}`;
+
+      document.getElementById("result-field").textContent = field.ar;
+      document.getElementById("result-field").style.color = field.color;
+      document.getElementById("result-desc").textContent = field.desc;
+
+      const btn = document.getElementById("btn-explore-field");
+      btn.style.background = `linear-gradient(135deg, ${field.color}, ${field.color}99)`;
+      btn.style.boxShadow = `0 12px 40px ${field.glow}`;
+
+      showPanel(quizResult);
+    }
+
+    function renderSectionBody(section, field) {
+      const body = document.createElement("div");
+      body.className = "field-section__body";
+
+      if (section.type === "items") {
+        const ul = document.createElement("ul");
+        section.items.forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          ul.appendChild(li);
+        });
+        body.appendChild(ul);
+      } else if (section.type === "groups") {
+        section.groups.forEach((group) => {
+          const wrap = document.createElement("div");
+          wrap.className = "field-group";
+          const label = document.createElement("div");
+          label.className = "field-group__label";
+          label.textContent = group.label;
+          wrap.appendChild(label);
+          const ul = document.createElement("ul");
+          group.items.forEach((item) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            ul.appendChild(li);
+          });
+          wrap.appendChild(ul);
+          body.appendChild(wrap);
+        });
+      } else if (section.type === "steps") {
+        section.steps.forEach((step, i) => {
+          const row = document.createElement("div");
+          row.className = "field-step";
+          const num = document.createElement("span");
+          num.className = "field-step__num";
+          num.style.background = field.color;
+          num.textContent = i + 1;
+          const text = document.createElement("span");
+          text.className = "field-step__text";
+          text.textContent = step;
+          row.appendChild(num);
+          row.appendChild(text);
+          body.appendChild(row);
+        });
+      } else if (section.type === "channels") {
+        const wrap = document.createElement("div");
+        wrap.className = "field-channels";
+        [["عربي", section.channels.ar], ["أجنبي", section.channels.en]].forEach(([tag, val]) => {
+          const row = document.createElement("div");
+          row.className = "field-channels__row";
+          const t = document.createElement("span");
+          t.className = "field-channels__tag";
+          t.textContent = tag + ":";
+          const v = document.createElement("span");
+          v.textContent = val;
+          row.appendChild(t);
+          row.appendChild(v);
+          wrap.appendChild(row);
+        });
+        body.appendChild(wrap);
+      } else if (section.type === "note") {
+        const note = document.createElement("div");
+        note.className = "field-note";
+        note.style.borderRightColor = field.color;
+        note.textContent = section.text;
+        body.appendChild(note);
+      } else if (section.type === "text") {
+        const p = document.createElement("p");
+        p.textContent = section.text;
+        body.appendChild(p);
+      } else if (section.type === "subcards") {
+        const wrap = document.createElement("div");
+        wrap.className = "field-subcards";
+        section.subcards.forEach((sc) => {
+          const card = document.createElement("div");
+          card.className = "field-subcard";
+          card.style.borderColor = field.border;
+          const h4 = document.createElement("div");
+          h4.className = "field-subcard__title";
+          h4.style.color = field.color;
+          h4.textContent = sc.title;
+          const p = document.createElement("p");
+          p.className = "field-subcard__text";
+          p.textContent = sc.text;
+          card.appendChild(h4);
+          card.appendChild(p);
+          wrap.appendChild(card);
+        });
+        body.appendChild(wrap);
+      }
+
+      return body;
+    }
+
+    function renderFieldSections(field) {
+      const container = document.getElementById("field-detail-sections");
+      container.innerHTML = "";
+
+      field.sections.forEach((section) => {
+        const article = document.createElement("article");
+        article.className = "field-section";
+        article.style.borderColor = field.border;
+        article.style.boxShadow = `0 0 20px ${field.glow}, inset 0 1px 0 rgba(255,255,255,0.06)`;
+
+        const title = document.createElement("h2");
+        title.className = "field-section__title";
+        title.style.color = field.color;
+        title.textContent = section.title;
+
+        article.appendChild(title);
+        article.appendChild(renderSectionBody(section, field));
+        container.appendChild(article);
+      });
+    }
+
+    function openFieldDetail(fieldId, backTarget = "paths") {
+      fieldDetailBackTarget = backTarget;
+      const field = FIELDS[fieldId];
+      if (!field) return;
+
+      hideHome();
+
+      const titleEl = document.getElementById("field-detail-title");
+      titleEl.textContent = field.ar;
+      titleEl.style.color = field.color;
+
+      renderFieldSections(field);
+      showPanel(fieldDetail);
+    }
+
+    function openPaths() {
+      hideHome();
+      showPanel(pathsSection);
+    }
+
+    function openGuideModal() {
+      guideModal.hidden = false;
+      guideModal.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeGuideModal() {
+      guideModal.classList.remove("is-open");
+      guideModal.hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    function openFeedback() {
+      hideHome();
+      resetFeedbackForm();
+      showPanel(feedbackSection);
+    }
+
+    function resetFeedbackForm() {
+      selectedRating = 0;
+      document.getElementById("rating-value").textContent = "—";
+      document.querySelectorAll(".rating-btn").forEach((btn) => btn.classList.remove("is-selected"));
+      document.getElementById("feedback-form").reset();
+      document.getElementById("feedback-form").classList.remove("is-hidden");
+      document.getElementById("feedback-success").classList.remove("is-visible");
+      document.getElementById("btn-send-feedback").disabled = false;
+    }
+
+    function initRatingButtons() {
+      const container = document.getElementById("rating-buttons");
+      for (let i = 1; i <= 10; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "rating-btn";
+        btn.textContent = i;
+        btn.setAttribute("aria-label", `تقييم ${i} من 10`);
+        btn.addEventListener("click", () => {
+          selectedRating = i;
+          document.getElementById("rating-value").textContent = i + " / 10";
+          container.querySelectorAll(".rating-btn").forEach((b) => b.classList.remove("is-selected"));
+          btn.classList.add("is-selected");
+        });
+        container.appendChild(btn);
+      }
+    }
+
+    async function sendFeedback(e) {
+      e.preventDefault();
+
+      if (!selectedRating) {
+        alert("الرجاء اختيار تقييم من 1 إلى 10");
+        return;
+      }
+
+      const positives = document.getElementById("feedback-positives").value.trim();
+      const negatives = document.getElementById("feedback-negatives").value.trim();
+      const kindWord = document.getElementById("feedback-kind").value.trim();
+
+      if (!positives && !negatives && !kindWord) {
+        alert("الرجاء كتابة ملاحظة واحدة على الأقل");
+        return;
+      }
+
+      const sendBtn = document.getElementById("btn-send-feedback");
+      sendBtn.disabled = true;
+      sendBtn.textContent = "جاري الإرسال...";
+
+      const templateParams = {
+        rating: selectedRating + " / 10",
+        positives: positives || "—",
+        negatives: negatives || "—",
+        message: kindWord || "—"
+      };
+
+      try {
+        if (typeof emailjs === "undefined") {
+          throw new Error("EmailJS not loaded");
+        }
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, {
+          publicKey: EMAILJS_PUBLIC_KEY
+        });
+        document.getElementById("feedback-form").classList.add("is-hidden");
+        document.getElementById("feedback-success").classList.add("is-visible");
+        feedbackSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (err) {
+        console.error("EmailJS error:", err);
+        alert("تعذّر إرسال التقييم. تأكد من إعداد EmailJS أو حاول لاحقاً.");
+        sendBtn.disabled = false;
+        sendBtn.textContent = "إرسال التقييم 🚀";
+      }
+    }
+
+    initRatingButtons();
+
+    if (typeof emailjs !== "undefined") {
+      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    }
+
+    document.getElementById("card-guide").addEventListener("click", openGuideModal);
+    document.getElementById("card-guide").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openGuideModal();
+      }
+    });
+
+    document.getElementById("guide-modal-close").addEventListener("click", closeGuideModal);
+    guideModal.addEventListener("click", (e) => {
+      if (e.target === guideModal) closeGuideModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && guideModal.classList.contains("is-open")) closeGuideModal();
+    });
+
+    document.getElementById("card-feedback").addEventListener("click", openFeedback);
+    document.getElementById("card-feedback").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openFeedback();
+      }
+    });
+
+    document.getElementById("feedback-form").addEventListener("submit", sendFeedback);
+
+    document.getElementById("btn-start").addEventListener("click", startQuiz);
+    document.getElementById("btn-start-ar").addEventListener("click", startQuiz);
+
+    document.getElementById("card-paths").addEventListener("click", openPaths);
+    document.getElementById("card-paths").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openPaths();
+      }
+    });
+
+    document.querySelectorAll(".path-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        openFieldDetail(card.dataset.field, "paths");
+      });
+    });
+
+    document.getElementById("btn-explore-field").addEventListener("click", () => {
+      openFieldDetail(lastResultField, "result");
+    });
+
+    document.getElementById("field-detail-back").addEventListener("click", () => {
+      if (fieldDetailBackTarget === "result") {
+        hideAllPanels();
+        homeView.style.display = "none";
+        quizResult.classList.add("is-active");
+        quizResult.scrollIntoView({ behavior: "smooth" });
+      } else if (fieldDetailBackTarget === "paths") {
+        showPanel(pathsSection);
+      } else {
+        showHome();
+      }
+    });
+
+    document.querySelectorAll("[data-go='home']").forEach((btn) => {
+      btn.addEventListener("click", showHome);
+    });
+
+    document.getElementById("logo-home").addEventListener("click", (e) => {
+      e.preventDefault();
+      showHome();
+    });
+  </script>
 </body>
 </html>
